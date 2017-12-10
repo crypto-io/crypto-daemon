@@ -44,17 +44,8 @@ const system = (() => {
   return {platform: this.platform, arch: this.arch}
 })
 
-async function install(version = '0.4.12', {platform, arch}) {
-    if (direxists('go-ipfs')) {
-      // const update = spawn('node', ['scripts/update.js']);
-      // update.stderr.on('data', data => {
-      //   console.error(data.toString());
-      // })
-      // update.stdout.on('data', data => {
-      //   console.log(data.toString());
-      // })
-      console.warn('should check for updates...');
-    } else {
+async function install(version = '0.4.13', {platform, arch}) {
+    if (!direxists('go-ipfs')) {
       const url = 'https://ipfs.io/ipns/dist.ipfs.io';
       const target = `go-ipfs/v${version}/go-ipfs_v${version}`;
       const ext = platform === 'windows' ? 'zip' : 'tar.gz';
@@ -70,4 +61,4 @@ async function install(version = '0.4.12', {platform, arch}) {
     }
 
 }
-return install('0.4.12', system());
+return install('0.4.13', system());
