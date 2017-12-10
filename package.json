@@ -1,0 +1,35 @@
+{
+  "name": "crypto-daemon",
+  "version": "0.1.0-alpha.2",
+  "description": "The node responible for connecting to the ipfs network.",
+  "main": "dist/daemon-node.js",
+  "module": "dist/daemon-es.js",
+  "repository": "https://github.com/crypto-io/crypto-daemon",
+  "author": "Glenn Vandeuren <vandeurenglenn@gmail.com>",
+  "license": "copyrighted",
+  "private": false,
+  "scripts": {
+    "install": "node .build/ipfs.js",
+    "start": "node dist/daemon-node.js"
+  },
+  "backed": {
+    "bundles": [
+      {
+        "src": "src/index.js",
+        "dest": "dist/daemon.js",
+        "format": "es"
+      },
+      {
+        "src": "src/index.js",
+        "dest": "dist/daemon.js",
+        "format": "cjs"
+      }
+    ],
+    "uglify": true
+  },
+  "dependencies": {
+    "crypto-io-utils": "^0.1.0-alpha.2",
+    "crypto-logger": "^0.1.0-alpha.7",
+    "download": "^6.2.5"
+  }
+}
