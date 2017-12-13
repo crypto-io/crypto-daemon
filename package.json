@@ -25,7 +25,7 @@
         "format": "cjs"
       }
     ],
-    "uglify": true
+    "minify": true
   },
   "dependencies": {
     "crypto-io-utils": "^0.1.0-alpha.2",
