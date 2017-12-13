@@ -7,7 +7,7 @@ const emitter = new EventEmitter();
 export class CryptoDaemon extends EventEmitter {
   constructor() {
     super();
-
+    // Bind methods
     this._onData = this._onData.bind(this);
     this._onError = this._onError.bind(this);
     this._onClose = this._onClose.bind(this);
@@ -15,7 +15,7 @@ export class CryptoDaemon extends EventEmitter {
 
   run() {
     log('Starting Daemon');
-    this.ipfs = spawn(`${__dirname}/../go-ipfs/ipfs.exe`, ['daemon']);
+    this.ipfs = spawn(`${__dirname}/../go-ipfs/ipfs`, ['daemon']);
     this.ipfs.stdout.on('data', this._onData);
     this.ipfs.stderr.on('data', this._onError);
     this.ipfs.on('close', this._onClose);
