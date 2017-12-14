@@ -52,7 +52,10 @@ async function install(version = '0.4.13', {platform, arch}) {
       // const exec = platform === 'windows' ?
       console.log(`installing go-ipfs ${platform}-${arch}`);
 
-      const files = await download(`${url}/${target}_${platform}-${arch}.${ext}`, {extract: true})
+      const files = await download(`${url}/${target}_${platform}-${arch}.${ext}`, {extract: true});
+      if (platform === 'linux' || platform === 'freebsd') {
+        spawn('chmod', ['+x', './go-ipfs/ipfs'])
+      }
       const promises = []
       for (const {path, data} of files) {
         promises.push(write(path, data));
