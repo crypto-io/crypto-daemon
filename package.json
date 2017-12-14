@@ -10,7 +10,8 @@
   "private": false,
   "scripts": {
     "install": "node .build/ipfs.js",
-    "start": "node dist/daemon-node.js"
+    "start": "node dist/daemon-node.js",
+    "test": "node test"
   },
   "backed": {
     "bundles": [
@@ -31,5 +32,8 @@
     "crypto-io-utils": "^0.1.0-alpha.2",
     "crypto-logger": "^0.1.0-alpha.7",
     "download": "^6.2.5"
+  },
+  "devDependencies": {
+    "tape": "^4.8.0"
   }
 }
