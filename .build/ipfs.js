@@ -54,7 +54,7 @@ async function install(version = '0.4.13', {platform, arch}) {
 
       const files = await download(`${url}/${target}_${platform}-${arch}.${ext}`, {extract: true});
       if (platform === 'linux' || platform === 'freebsd') {
-        spawn('chmod', ['+x', './go-ipfs/ipfs'])
+        spawn('chmod', ['+x', `${__dirname}/../go-ipfs/ipfs`])
       }
       const promises = []
       for (const {path, data} of files) {
