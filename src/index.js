@@ -4,7 +4,7 @@ import { log, stopAndPersist, succes, info, fail } from 'crypto-logger';
 import EventEmitter from 'events';
 const emitter = new EventEmitter();
 
-export class CryptoDaemon extends EventEmitter {
+export default class CryptoDaemon extends EventEmitter {
   constructor() {
     super();
     // Bind methods
@@ -13,7 +13,7 @@ export class CryptoDaemon extends EventEmitter {
     this._onClose = this._onClose.bind(this);
   }
 
-  run() {
+  start() {
     log('Starting Daemon');
     this.ipfs = spawn(`${__dirname}/../go-ipfs/ipfs`, ['daemon']);
     this.ipfs.stdout.on('data', this._onData);
@@ -47,7 +47,7 @@ export class CryptoDaemon extends EventEmitter {
     const unlock = spawn('go-ipfs/ipfs.exe', ['repo', 'fsck'])
     unlock.stdout.on('data', data => {
       info('Restarting Daemon');
-      return this.run();
+      return this.start();
     })
   }
 
@@ -59,8 +59,7 @@ export class CryptoDaemon extends EventEmitter {
       if (process.env.DEBUG) {
         console.log(string);
       }
-      // this.emit('error', string);
+      this.emit('error', string);
     }
   }
 }
-export default new CryptoDaemon().run();
