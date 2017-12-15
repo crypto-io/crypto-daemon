@@ -1,5 +1,7 @@
 # crypto-daemon
 
+[![Build Status](https://travis-ci.org/crypto-io/crypto-daemon.svg?branch=master)](https://travis-ci.org/crypto-io/crypto-daemon)
+
 > The node responsible for connecting to the ipfs network
 
 ## Install
