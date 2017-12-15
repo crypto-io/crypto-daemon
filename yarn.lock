@@ -98,8 +98,8 @@ core-util-is@~1.0.0:
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
 crypto-io-utils@^0.1.0-alpha.2:
-  version "0.1.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/crypto-io-utils/-/crypto-io-utils-0.1.0-alpha.2.tgz#014cd9e7a23b68c880a48f2693ff8ceb7524c0da"
+  version "0.1.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/crypto-io-utils/-/crypto-io-utils-0.1.0-alpha.3.tgz#202fb29204fb45ce55d20bdd5cf20404677eb9f2"
 
 crypto-logger@^0.1.0-alpha.7:
   version "0.1.0-alpha.7"
