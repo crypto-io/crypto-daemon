@@ -8,6 +8,8 @@ const { unlinkSync, rmdirSync } = require('fs');
 const { log, stopAndPersist, succes, info, fail } = require('crypto-logger');
 
 const home = join(homedir(), '.crypto');
+const ipfsPath = join(home, 'ipfs/ipfs');
+const ipfsdir = join(homedir(), '.ipfs');
 
 log(`installing prebuilt api dependencies`);
 
@@ -81,6 +83,10 @@ async function install(version = '0.4.13', {platform, arch}) {
             }
           }
           await rmdirSync(join(home, 'go-ipfs'));
+
+          if (!direxists(ipfsdir)) {
+            spawn(ipfsPath, ['init'])
+          }
           succes(`installing go-ipfs ${platform}-${arch}`)
         } else {
           info(`Processing [${i}/${files.length}]`);
