@@ -73,15 +73,6 @@ async function install(version = '0.4.13', {platform, arch}) {
         i++
         if (i === files.length) {
           info(`Moving some files`);
-          if (platform === 'linux' || platform === 'freebsd') {
-            log(`making ipfs executable`);
-            try {
-              spawn('chmod', ['+x', join(home, 'ipfs', 'ipfs')]);
-              succes('making ipfs executable');
-            } catch (error) {
-              fail(error)
-            }
-          }
           await rmdirSync(join(home, 'go-ipfs'));
 
           if (!direxists(ipfsdir)) {
