@@ -6,7 +6,7 @@
   "module": "dist/daemon-es.js",
   "repository": "https://github.com/crypto-io/crypto-daemon",
   "author": "Glenn Vandeuren <vandeurenglenn@gmail.com>",
-  "license": "copyrighted",
+  "license": "MIT",
   "private": false,
   "scripts": {
     "install": "node .build/ipfs.js",
