@@ -1,10 +1,15 @@
 const download = require('download');
-const { platform, arch } = require('os');
+const { platform, arch, homedir } = require('os');
 const { write, direxists } = require('crypto-io-utils');
 const { Transform } = require('stream');
 const { spawn } = require('child_process');
+const { join } = require('path');
+const { unlinkSync, rmdirSync } = require('fs');
+const { log, stopAndPersist, succes, info, fail } = require('crypto-logger');
 
-console.log(`installing prebuilt api dependencies`);
+const home = join(homedir(), '.crypto');
+
+log(`installing prebuilt api dependencies`);
 
 const system = (() => {
   this.arch = arch();
@@ -45,23 +50,45 @@ const system = (() => {
 })
 
 async function install(version = '0.4.13', {platform, arch}) {
-    if (!direxists('go-ipfs')) {
+    if (await !direxists(join(home, 'ipfs'))) {
       const url = 'https://ipfs.io/ipns/dist.ipfs.io';
       const target = `go-ipfs/v${version}/go-ipfs_v${version}`;
       const ext = platform === 'windows' ? 'zip' : 'tar.gz';
       // const exec = platform === 'windows' ?
-      console.log(`installing go-ipfs ${platform}-${arch}`);
+      log(`installing go-ipfs ${platform}-${arch}`);
 
-      const files = await download(`${url}/${target}_${platform}-${arch}.${ext}`, {extract: true});
-      if (platform === 'linux' || platform === 'freebsd') {
-        spawn('chmod', ['+x', `${__dirname}/../go-ipfs/ipfs`])
-      }
+      const files = await download(`${url}/${target}_${platform}-${arch}.${ext}`,
+        home,
+        {extract: true}
+      );
       const promises = []
+      info(`Moving some files [0/${files.length}]`);
+      let i = 0;
       for (const {path, data} of files) {
-        promises.push(write(path, data));
+        const dest = join(home, path.replace('go-', ''));
+        await write(dest, data);
+        await unlinkSync(join(home, path))
+        i++
+        if (i === files.length) {
+          info(`Moving some files`);
+          if (platform === 'linux' || platform === 'freebsd') {
+            log(`making ipfs executable`);
+            try {
+              spawn('chmod', ['+x', join(home, 'ipfs', 'ipfs')]);
+              succes('making ipfs executable');
+            } catch (error) {
+              fail(error)
+            }
+          }
+          await rmdirSync(join(home, 'go-ipfs'));
+          succes(`installing go-ipfs ${platform}-${arch}`)
+        } else {
+          info(`Processing [${i}/${files.length}]`);
+        }
       }
-      await Promise.all(promises);
     }
+
+    succes('installing prebuilt dependencies');
 
 }
 return install('0.4.13', system());
