@@ -2,6 +2,8 @@
 import {spawn} from 'child_process';
 import { log, stopAndPersist, succes, info, fail } from 'crypto-logger';
 import EventEmitter from 'events';
+import { read, write } from 'crypto-io-utils';
+import { homedir } from 'os';
 const emitter = new EventEmitter();
 
 export default class CryptoDaemon extends EventEmitter {
@@ -14,16 +16,38 @@ export default class CryptoDaemon extends EventEmitter {
   }
 
   start() {
+    return new Promise((resolve, reject) => {
+      if (process.env.DEBUG) {
+        console.log('checking for other daemons');
+      }
+      read(`${homedir()}/.crypto.daemon.locked`, 'string').then(value => {
+        if (Boolean(value === 'true')) {
+          // CRYPTODAEMON DAEMON ALREADY RUNNING
+          reject({code: 'CRYPD_DAR', error: 'Another daemon is already running'});
+        } else {
+          this._start();
+          resolve();
+        }
+      }).catch(error => {
+        this._start();
+        resolve();
+      });
+    });
+  }
+
+  stop() {
+    write(`${homedir()}/.crypto.daemon.locked`, false).then(() => {
+      log('killing Daemon');
+      this.ipfs.kill();
+    });
+  }
+
+  _start() {
     log('Starting Daemon');
     this.ipfs = spawn(`${__dirname}/../go-ipfs/ipfs`, ['daemon']);
     this.ipfs.stdout.on('data', this._onData);
     this.ipfs.stderr.on('data', this._onError);
     this.ipfs.on('close', this._onClose);
-  }
-
-  stop() {
-    log('killing Daemon');
-    this.ipfs.kill();
   }
 
   _onClose(code) {
@@ -37,6 +61,7 @@ export default class CryptoDaemon extends EventEmitter {
     if (isReady) {
       succes('Daemon started');
       this.emit('ready');
+      write(`${homedir()}/.crypto.daemon.locked`, true);
     };
   }
 
