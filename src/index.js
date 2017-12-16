@@ -90,7 +90,7 @@ export default class CryptoDaemon extends EventEmitter {
       if (process.env.DEBUG) {
         console.log(string);
       }
-      this.emit('error', string);
+      this.emit('warning', string);
     }
   }
 }
