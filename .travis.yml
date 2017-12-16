@@ -5,6 +5,8 @@ node_js:
 - '9'
 cache:
   yarn: true
+  directories:
+    - 'node_modules'
 before_script:
 - npm install -g backed-cli
 - backed -b
