@@ -31,12 +31,12 @@ export default class CryptoDaemon extends EventEmitter {
           fail('Another daemon is already running')
           reject({code: 'CRYPD_DAR', error: 'Another daemon is already running'});
         } else {
+          this.on('ready', () => resolve());
           this._start();
-          resolve();
         }
       }).catch(error => {
+        this.on('ready', () => resolve());
         this._start();
-        resolve();
       });
     });
   }
