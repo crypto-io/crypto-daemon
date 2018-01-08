@@ -7,7 +7,7 @@ const { join } = require('path');
 const { unlinkSync, rmdirSync } = require('fs');
 const { log, stopAndPersist, succes, info, fail } = require('crypto-logger');
 
-const home = join(homedir(), '.crypto');
+const home = join(homedir(), '.crypto-io');
 const ipfsPath = join(home, 'ipfs/ipfs');
 const ipfsdir = join(homedir(), '.ipfs');
 
@@ -64,7 +64,7 @@ async function install(version = '0.4.13', {platform, arch}) {
         {extract: true}
       );
       const promises = []
-      info(`Moving some files [0/${files.length}]`);
+      info(`Moving some files [1/${files.length}]`);
       let i = 0;
       for (const {path, data} of files) {
         const dest = join(home, path.replace('go-', ''));
@@ -89,12 +89,10 @@ async function install(version = '0.4.13', {platform, arch}) {
           }
           succes(`installing go-ipfs ${platform}-${arch}`)
         } else {
-          info(`Processing [${i}/${files.length}]`);
+          info(`Processing [${i + 1}/${files.length}]`);
         }
       }
     }
-
     succes('installing prebuilt dependencies');
-
 }
 return install('0.4.13', system());
