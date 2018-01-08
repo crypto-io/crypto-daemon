@@ -20,8 +20,7 @@ yarn add crypto-daemon
 
 ## Example
 ```js
-const CryptoDaemon = require('crypto-daemon');
-const daemon = new CryptoDaemon();
+const daemon = require('crypto-daemon');
 
 daemon.on('ready', () => console.log('daemon running'));
 try {
