@@ -4,7 +4,7 @@ const { write, direxists } = require('crypto-io-utils');
 const { Transform } = require('stream');
 const { spawn } = require('child_process');
 const { join } = require('path');
-const { unlinkSync, rmdirSync } = require('fs');
+const { unlinkSync, rmdirSync, readdir } = require('fs');
 const { log, stopAndPersist, succes, info, fail } = require('crypto-logger');
 
 const home = join(homedir(), '.crypto-io');
@@ -12,6 +12,19 @@ const ipfsPath = join(home, 'ipfs/ipfs');
 const ipfsdir = join(homedir(), '.ipfs');
 
 log(`installing prebuilt api dependencies`);
+
+const hasFile = (path, name) => new Promise((resolve, reject) => {
+  readdir(path, (error, files) => {
+    if (error) reject(error);
+    else
+      for (const file of files) {
+        if (file.includes('ipfs')) {
+          return resolve(true);
+        }
+      }
+      resolve(false);
+  })
+});
 
 const system = (() => {
   this.arch = arch();
@@ -52,7 +65,8 @@ const system = (() => {
 })
 
 async function install(version = '0.4.13', {platform, arch}) {
-    if (await !direxists(join(home, 'ipfs'))) {
+    const hasipfs = await hasFile(join(home, 'ipfs'), 'ipfs')
+    if (!hasipfs) {
       const url = 'https://ipfs.io/ipns/dist.ipfs.io';
       const target = `go-ipfs/v${version}/go-ipfs_v${version}`;
       const ext = platform === 'windows' ? 'zip' : 'tar.gz';
