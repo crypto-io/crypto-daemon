@@ -29,7 +29,7 @@
     "minify": true
   },
   "dependencies": {
-    "crypto-io-utils": "^0.1.0-alpha.2",
+    "crypto-io-utils": "0.1.0-rc.3",
     "crypto-logger": "^0.1.0-alpha.7",
     "download": "^6.2.5"
   },
