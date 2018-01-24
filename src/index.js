@@ -4,65 +4,81 @@ import { log, stopAndPersist, succes, info, fail } from 'crypto-logger';
 import EventEmitter from 'events';
 import { homedir } from 'os';
 import { join } from 'path';
-const home = join(homedir(), '.crypto-io');
-const ipfsPath = join(home, 'ipfs/ipfs');
-const emitter = new EventEmitter();
+import { readdirectory } from 'crypto-io-fs';
+import { trymore } from 'crypto-io-utils';
 
-let ipfs;
+class CryptoDaemon extends EventEmitter {
+  constructor() {
+    super();
+  }
 
-const _failsafe = () => {
-  info('removing lock from repo');
-  const unlock = spawn(ipfsPath, ['repo', 'fsck'])
-  unlock.stdout.on('data', data => {
-    info('Restarting Daemon');
-    return start();
-  })
-}
+  _failsafe() {
+    info('removing lock from repo');
+    const unlock = spawn(this.ipfsPath, ['repo', 'fsck'])
+    unlock.stdout.on('data', data => {
+      info('Restarting Daemon');
+      this.start();
+    });
+  }
 
-export const on = (name, cb) => {
-  emitter.on(name, cb)
-}
+  start() {
+    (async () => {
+      this.files = await trymore(readdirectory, [
+        `${join(process.cwd(), 'ipfs')}`,
+        `${join(__dirname, 'ipfs')}`,
+        `${join(homedir(), '.crypto-io', 'ipfs')}`
+      ]);
 
-export const start = () => {
-  log('Starting Daemon');
-  ipfs = spawn(ipfsPath, ['daemon']);
-
-  ipfs.stdout.on('data', data => {
-    const string = data.toString();
-    const isReady = string.includes('Daemon is ready');
-    if (isReady) {
-      if (string.includes('Gateway')) {
-        const parts = string.split('Daemon is ready');
-        info(parts[0]);
-        succes('Daemon is ready');
-      } else {
-        succes(data);
+      for (const {filename, path} of this.files[1]) {
+        if (filename.includes('ipfs.')) {
+          this.ipfsPath = path;
+        }
       }
-      emitter.emit('ready');
-    } else {
-      info(data);
-    }
-  });
 
-  ipfs.stderr.on('data', data => {
-    const string = data.toString();
-    if (string.includes('cannot acquire lock')) {
-      fail('cannot acquire lock');
-      return _failsafe();
-    } else {
-      if (process.env.DEBUG) {
-        console.log(string);
-      }
-      fail(data);
-    }
-  });
+      log('Starting Daemon');
+      this.daemon = spawn(this.ipfsPath, ['daemon']);
 
-  ipfs.on('close', code => {
-    if (process.env.DEBUG) console.log(`child process exited with code ${code}`);
-  });
-};
+      this.daemon.stdout.on('data', data => {
+        const string = data.toString();
+        const isReady = string.includes('Daemon is ready');
+        if (isReady) {
+          if (string.includes('Gateway')) {
+            const parts = string.split('Daemon is ready');
+            info(parts[0]);
+            succes('Daemon is ready');
+          } else {
+            succes(data);
+          }
+          this.emit('ready');
+        } else {
+          info(data);
+        }
+      });
 
-export const stop = () => {
-  log('killing Daemon');
-  ipfs.kill();
+      this.daemon.stderr.on('data', data => {
+        const string = data.toString();
+        if (string.includes('cannot acquire lock')) {
+          fail('cannot acquire lock');
+          this._failsafe();
+        } else {
+          if (process.env.DEBUG) {
+            console.log(string);
+          }
+          fail(data);
+        }
+      });
+
+      this.daemon.on('close', code => {
+        if (process.env.DEBUG) console.log(`child process exited with code ${code}`);
+      });
+    })();
+  }
+
+  stop() {
+    log('killing Daemon');
+    this.daemon.kill();
+  }
 }
+
+
+export default (() => new CryptoDaemon())();
