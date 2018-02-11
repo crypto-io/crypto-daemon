@@ -1,6 +1,6 @@
 {
   "name": "crypto-daemon",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "The node responible for connecting to the ipfs network.",
   "main": "dist/daemon-node.js",
   "module": "dist/daemon-es.js",
