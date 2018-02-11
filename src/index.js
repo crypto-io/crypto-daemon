@@ -64,6 +64,8 @@ class CryptoDaemon extends EventEmitter {
         if (string.includes('cannot acquire lock')) {
           fail('cannot acquire lock');
           this._failsafe();
+        } else if (string.includes('loggableKey')) {
+          this.emit('warning', data);
         } else {
           fail(data);
         }
