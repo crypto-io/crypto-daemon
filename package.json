@@ -14,6 +14,7 @@
     "test": "node test"
   },
   "backed": {
+    "uglify": true,
     "bundles": [
       {
         "src": "src/index.js",
@@ -25,11 +26,10 @@
         "dest": "dist/daemon.js",
         "format": "cjs"
       }
-    ],
-    "minify": true
+    ]
   },
   "dependencies": {
-    "crypto-io-fs": "^0.1.1",
+    "crypto-io-fs": "^0.1.2",
     "crypto-io-utils": "^0.1.2",
     "crypto-logger": "^0.1.0-alpha.7",
     "download": "^6.2.5"

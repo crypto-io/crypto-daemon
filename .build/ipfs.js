@@ -1,6 +1,6 @@
 const download = require('download');
 const { platform, arch, homedir } = require('os');
-const { write, direxists } = require('crypto-io-utils');
+const { write, direxists } = require('crypto-io-fs');
 const { Transform } = require('stream');
 const { spawn } = require('child_process');
 const { join } = require('path');
@@ -15,7 +15,7 @@ log(`installing prebuilt api dependencies`);
 
 const hasFile = (path, name) => new Promise((resolve, reject) => {
   readdir(path, (error, files) => {
-    if (error) reject(error);
+    if (error) resolve(false);
     else
       for (const file of files) {
         if (file.includes('ipfs')) {

@@ -97,9 +97,9 @@ core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
-crypto-io-fs@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/crypto-io-fs/-/crypto-io-fs-0.1.1.tgz#aa6e7a507b7a340deed166ca215641d41ac6d548"
+crypto-io-fs@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/crypto-io-fs/-/crypto-io-fs-0.1.2.tgz#fcfba3234729d9dcc7b0d118f5d671b11396895f"
 
 crypto-io-utils@^0.1.2:
   version "0.1.2"

@@ -21,8 +21,8 @@ class CryptoDaemon extends EventEmitter {
     });
   }
 
-  start(flags = []) {
-    (async () => {
+  async start(flags = ['']) {
+    try {
       this.files = await trymore(readdirectory, [
         `${join(process.cwd(), 'ipfs')}`,
         `${join(__dirname, 'ipfs')}`,
@@ -71,7 +71,9 @@ class CryptoDaemon extends EventEmitter {
       this.daemon.on('close', code => {
         if (process.env.DEBUG) console.log(`child process exited with code ${code}`);
       });
-    })();
+    } catch (e) {
+      throw e;
+    }
   }
 
   stop() {

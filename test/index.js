@@ -1,5 +1,5 @@
 const test = require('tape');
-const daemon = require('./../dist/daemon-node.js');
+const daemon = require('./../dist/daemon-node.min.js');
 
 test('ready', tape => {
   tape.plan(1);
