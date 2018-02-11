@@ -21,7 +21,7 @@ class CryptoDaemon extends EventEmitter {
     });
   }
 
-  start() {
+  start(flags = []) {
     (async () => {
       this.files = await trymore(readdirectory, [
         `${join(process.cwd(), 'ipfs')}`,
@@ -35,8 +35,11 @@ class CryptoDaemon extends EventEmitter {
         }
       }
 
-      log('Starting Daemon');
-      this.daemon = spawn(this.ipfsPath, ['daemon']);
+      log(`Starting Daemon`);
+      if (flags.length > 0) {
+        info(`Flags ${[...flags]}`);
+      }
+      this.daemon = spawn(this.ipfsPath, ['daemon', ...flags]);
 
       this.daemon.stdout.on('data', data => {
         const string = data.toString();
@@ -61,9 +64,6 @@ class CryptoDaemon extends EventEmitter {
           fail('cannot acquire lock');
           this._failsafe();
         } else {
-          if (process.env.DEBUG) {
-            console.log(string);
-          }
           fail(data);
         }
       });

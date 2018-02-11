@@ -3,12 +3,8 @@ const daemon = require('./../dist/daemon-node.js');
 
 test('ready', tape => {
   tape.plan(1);
-  try {
-    daemon.on('ready', () => {tape.pass('daemon running')});
-    daemon.start();
-  } catch (error) {
-    tape.fail(error);
-  }
+  daemon.on('ready', () => {tape.pass('daemon running')});
+  daemon.start(['--enable-pubsub-experiment']);
 });
 
 test('stop', tape => {
