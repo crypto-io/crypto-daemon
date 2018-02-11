@@ -17,11 +17,12 @@ class CryptoDaemon extends EventEmitter {
     const unlock = spawn(this.ipfsPath, ['repo', 'fsck'])
     unlock.stdout.on('data', data => {
       info('Restarting Daemon');
-      this.start();
+      this.start(this.flags || []);
     });
   }
 
-  async start(flags = ['']) {
+  async start(flags = []) {
+    this.flags = flags;
     try {
       this.files = await trymore(readdirectory, [
         `${join(process.cwd(), 'ipfs')}`,
@@ -36,10 +37,10 @@ class CryptoDaemon extends EventEmitter {
       }
 
       log(`Starting Daemon`);
-      if (flags.length > 0) {
+      if (this.flags.length > 0) {
         info(`Flags ${[...flags]}`);
       }
-      this.daemon = spawn(this.ipfsPath, ['daemon', ...flags]);
+      this.daemon = spawn(this.ipfsPath, ['daemon', ...this.flags]);
 
       this.daemon.stdout.on('data', data => {
         const string = data.toString();
