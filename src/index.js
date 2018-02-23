@@ -3,11 +3,10 @@ import { spawn } from 'child_process';
 import { log, stopAndPersist, succes, info, fail } from 'crypto-logger';
 import EventEmitter from 'events';
 import { homedir } from 'os';
-import { join } from 'path';
+import { join, sep } from 'path';
 import { readdirectory } from 'crypto-io-fs';
 import { trymore } from 'crypto-io-utils';
 
-console.log(homedir());
 class CryptoDaemon extends EventEmitter {
   constructor() {
     super();
@@ -30,9 +29,12 @@ class CryptoDaemon extends EventEmitter {
         `${join(__dirname, 'ipfs')}`,
         `${join(homedir(), '.crypto-io', 'ipfs')}`
       ]);
-      console.log(this.files);
+
       for (const {filename, path} of this.files[1]) {
-        if (path.includes('ipfs/ipfs')) {
+        const parts = path.split(sep);
+        const last = parts.length - 1;
+
+        if (parts[last].includes('ipfs') && parts[last - 1] === 'ipfs') {
           this.ipfsPath = path;
         }
       }
