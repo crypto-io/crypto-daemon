@@ -7,6 +7,7 @@ import { join } from 'path';
 import { readdirectory } from 'crypto-io-fs';
 import { trymore } from 'crypto-io-utils';
 
+console.log(homedir());
 class CryptoDaemon extends EventEmitter {
   constructor() {
     super();
@@ -29,9 +30,9 @@ class CryptoDaemon extends EventEmitter {
         `${join(__dirname, 'ipfs')}`,
         `${join(homedir(), '.crypto-io', 'ipfs')}`
       ]);
-
+      console.log(this.files);
       for (const {filename, path} of this.files[1]) {
-        if (filename.includes('ipfs.')) {
+        if (path.includes('ipfs/ipfs')) {
           this.ipfsPath = path;
         }
       }
