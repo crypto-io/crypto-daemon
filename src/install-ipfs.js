@@ -13,7 +13,7 @@ const ipfsdir = join(homedir(), '.ipfs');
 
 log(`installing prebuilt api dependencies`);
 
-const hasFile = (path, name) => new Promise((resolve, reject) => {
+export const hasFile = (path, name) => new Promise((resolve, reject) => {
   readdir(path, (error, files) => {
     if (error) resolve(false);
     else
@@ -26,42 +26,43 @@ const hasFile = (path, name) => new Promise((resolve, reject) => {
   })
 });
 
-const system = (() => {
-  this.arch = arch();
+export const system = (() => {
+  let architecture = arch();
+  let os;
   switch (platform()) {
     case 'darwin':
     case 'linux':
     case 'freebsd':
-      this.platform = platform();
+      os = platform();
       break;
     case 'win32':
-      this.platform = 'windows';
+      os = 'windows';
       break;
     default:
       return console.warn('unsupported platform');
   }
   switch (arch()) {
     case 'arm':
-      this.arch = 'arm';
+      architecture = 'arm';
       break;
     case 'x32':
     case 'x86':
-      this.arch = '386';
+      architecture = '386';
       break;
     case 'x64':
-      this.arch = 'amd64'
+      architecture = 'amd64'
       break;
     default:
-      return console.warn(`${arch()} is not supported for ${platform()}`);
+      return console.warn(`${architecture()} is not supported for ${platform()}`);
   }
-  if (this.arch === 'arm' && this.platform !== 'linux') {
-    return console.warn(`${this.arch} is not supported for ${this.platform}`);
-  } else if (this.arch === '386') {
-    if (this.platform === 'freebsd' || 'windows') {
-      return console.warn(`${this.arch} is not supported for ${this.platform}`);
+  if (architecture === 'arm' && os !== 'linux') {
+    return console.warn(`${architecture} is not supported for ${os}`);
+  } else if (architecture === '386') {
+    if (platform === 'freebsd' || 'windows') {
+      return console.warn(`${architecture} is not supported for ${os}`);
     }
   }
-  return {platform: this.platform, arch: this.arch}
+  return {platform: os, arch: architecture}
 })
 
 async function install(version = '0.4.13', {platform, arch}) {
@@ -109,4 +110,4 @@ async function install(version = '0.4.13', {platform, arch}) {
     }
     succes('installing prebuilt dependencies');
 }
-return install('0.4.13', system());
+export default install('0.4.13', system());

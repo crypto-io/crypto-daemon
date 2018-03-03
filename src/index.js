@@ -6,6 +6,7 @@ import { homedir } from 'os';
 import { join, sep } from 'path';
 import { readdirectory } from 'crypto-io-fs';
 import { trymore } from 'crypto-io-utils';
+import install from './install-ipfs';
 
 class CryptoDaemon extends EventEmitter {
   constructor() {
@@ -22,6 +23,7 @@ class CryptoDaemon extends EventEmitter {
   }
 
   async start(flags = []) {
+    await install;
     this.flags = flags;
     try {
       this.files = await trymore(readdirectory, [

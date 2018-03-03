@@ -9,7 +9,6 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "install": "node .build/ipfs.js",
     "start": "node dist/daemon-node.js",
     "test": "node test"
   },
