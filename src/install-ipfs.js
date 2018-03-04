@@ -79,15 +79,16 @@ async function install(version = '0.4.13', {platform, arch}) {
         {extract: true}
       );
       const promises = []
-      info(`Moving some files [1/${files.length}]`);
+      info(`Moving some files`);
       let i = 0;
+      info(`Processing [${i + 1}/${files.length}]`);
       for (const {path, data} of files) {
         const dest = join(home, path.replace('go-', ''));
         await write(dest, data);
         await unlinkSync(join(home, path))
         i++
         if (i === files.length) {
-          info(`Moving some files`);
+          succes(`Moving some files`);
           if (platform === 'linux' || platform === 'freebsd') {
             log(`making ipfs executable`);
             try {
@@ -99,9 +100,9 @@ async function install(version = '0.4.13', {platform, arch}) {
           }
           await rmdirSync(join(home, 'go-ipfs'));
 
-          if (!direxists(ipfsdir)) {
-            spawnSync(ipfsPath, ['init']);
-          }
+          // if (!direxists(ipfsdir)) {
+          spawnSync(ipfsPath, ['init']);
+          // }
           succes(`installing go-ipfs ${platform}-${arch}`)
         } else {
           info(`Processing [${i + 1}/${files.length}]`);
