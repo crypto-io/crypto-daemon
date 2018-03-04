@@ -2,7 +2,7 @@ const download = require('download');
 const { platform, arch, homedir } = require('os');
 const { write, direxists } = require('crypto-io-fs');
 const { Transform } = require('stream');
-const { spawn } = require('child_process');
+const { spawnSync } = require('child_process');
 const { join } = require('path');
 const { unlinkSync, rmdirSync, readdir } = require('fs');
 const { log, stopAndPersist, succes, info, fail } = require('crypto-logger');
@@ -91,7 +91,7 @@ async function install(version = '0.4.13', {platform, arch}) {
           if (platform === 'linux' || platform === 'freebsd') {
             log(`making ipfs executable`);
             try {
-              spawn('chmod', ['+x', join(home, 'ipfs', 'ipfs')]);
+              spawnSync('chmod', ['+x', join(home, 'ipfs', 'ipfs')]);
               succes('making ipfs executable');
             } catch (error) {
               fail(error)
@@ -100,7 +100,7 @@ async function install(version = '0.4.13', {platform, arch}) {
           await rmdirSync(join(home, 'go-ipfs'));
 
           if (!direxists(ipfsdir)) {
-            spawn(ipfsPath, ['init'])
+            spawnSync(ipfsPath, ['init']);
           }
           succes(`installing go-ipfs ${platform}-${arch}`)
         } else {
@@ -109,5 +109,6 @@ async function install(version = '0.4.13', {platform, arch}) {
       }
     }
     succes('installing prebuilt dependencies');
+    return;
 }
 export default install('0.4.13', system());
