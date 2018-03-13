@@ -71,7 +71,9 @@ class CryptoDaemon extends EventEmitter {
           this._failsafe();
         } else if (string.includes('loggableKey')) {
           this.emit('warning', data);
-        } else {
+        } else if(string.includes('daemon is running')) {
+	  this.emit('ready');
+	} else {
           fail(data);
         }
       });
