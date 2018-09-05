@@ -7,7 +7,6 @@ import { join, sep } from 'path';
 import { readdirectory } from 'crypto-io-fs';
 import { trymore } from 'crypto-io-utils';
 import install from './install-ipfs';
-process.env.IPFS_PATH = 'repo';
 
 class CryptoDaemon extends EventEmitter {
   constructor() {

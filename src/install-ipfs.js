@@ -11,6 +11,8 @@ const home = join(homedir(), '.crypto-io');
 const ipfsPath = join(home, 'ipfs/ipfs');
 const ipfsdir = join(homedir(), '.ipfs');
 
+process.env.IPFS_PATH = join(home, 'repo')
+
 log(`installing prebuilt api dependencies`);
 
 export const hasFile = (path, name) => new Promise((resolve, reject) => {
@@ -101,7 +103,7 @@ async function install(version = '0.4.17', {platform, arch}) {
           await rmdirSync(join(home, 'go-ipfs'));
 
           // if (!direxists(ipfsdir)) {
-          spawnSync(ipfsPath, ['init']);
+          spawnSync(ipfsPath, ['init'], { env: process.env });
           // }
           succes(`installing go-ipfs ${platform}-${arch}`)
         } else {
