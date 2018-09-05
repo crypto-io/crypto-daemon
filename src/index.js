@@ -7,6 +7,7 @@ import { join, sep } from 'path';
 import { readdirectory } from 'crypto-io-fs';
 import { trymore } from 'crypto-io-utils';
 import install from './install-ipfs';
+process.env.IPFS_PATH = 'repo';
 
 class CryptoDaemon extends EventEmitter {
   constructor() {
@@ -45,7 +46,8 @@ class CryptoDaemon extends EventEmitter {
       if (this.flags.length > 0) {
         info(`Flags ${[...flags]}`);
       }
-      this.daemon = spawn(this.ipfsPath, ['daemon', ...this.flags]);
+
+      this.daemon = spawn(this.ipfsPath, ['daemon', ...this.flags], {env: process.env});
 
       this.daemon.stdout.on('data', data => {
         const string = data.toString();
