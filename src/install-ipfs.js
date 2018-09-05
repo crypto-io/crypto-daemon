@@ -65,7 +65,7 @@ export const system = (() => {
   return {platform: os, arch: architecture}
 })
 
-async function install(version = '0.4.13', {platform, arch}) {
+async function install(version = '0.4.17', {platform, arch}) {
     const hasipfs = await hasFile(join(home, 'ipfs'), 'ipfs')
     if (!hasipfs) {
       const url = 'https://ipfs.io/ipns/dist.ipfs.io';
